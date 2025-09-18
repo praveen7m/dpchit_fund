@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DPChits Professional Design System
+Business-friendly chit fund management interface with modern aesthetics
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Base colors - clean and professional */
+    --background: 0 0% 99%;
+    --foreground: 215 25% 15%;
+
+    /* Card system - subtle elevation */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    /* Popover elements */
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary brand - professional teal */
+    --primary: 185 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 185 84% 35%;
+    --primary-light: 185 84% 92%;
+
+    /* Secondary colors - soft blue-gray */
+    --secondary: 215 25% 96%;
+    --secondary-foreground: 215 25% 25%;
+    --secondary-hover: 215 25% 92%;
+
+    /* Muted elements */
+    --muted: 215 15% 96%;
+    --muted-foreground: 215 15% 45%;
+
+    /* Accent - complementary orange for highlights */
+    --accent: 25 85% 60%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 25 85% 95%;
+
+    /* Success and error states */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 76% 95%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 215 15% 88%;
+    --input: 215 15% 94%;
+    --ring: 185 84% 39%;
+
+    /* Layout properties */
+    --radius: 0.75rem;
+
+    /* Sidebar system */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 25% 25%;
+    --sidebar-primary: 185 84% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 15% 96%;
+    --sidebar-accent-foreground: 215 25% 25%;
+    --sidebar-border: 215 15% 90%;
+    --sidebar-ring: 185 84% 39%;
+
+    /* Dashboard cards */
+    --card-stats: 0 0% 100%;
+    --card-stats-border: 215 15% 90%;
+    --card-stats-shadow: 215 15% 50% / 0.08;
+
+    /* Table elements */
+    --table-header: 215 15% 97%;
+    --table-row-hover: 215 15% 98%;
+    --table-border: 215 15% 92%;
+
+    /* Form elements */
+    --form-background: 0 0% 100%;
+    --form-border: 215 15% 88%;
+    --form-focus: 185 84% 39%;
+
+    /* Gradients for visual appeal */
+    --gradient-primary: linear-gradient(135deg, hsl(185 84% 39%) 0%, hsl(185 84% 45%) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(215 15% 98%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(215 15% 99%) 100%);
+
+    /* Animations and transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
+
+    /* Shadows for depth */
+    --shadow-sm: 0 1px 3px 0 hsl(215 15% 50% / 0.1);
+    --shadow-md: 0 4px 6px -1px hsl(215 15% 50% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(215 15% 50% / 0.1);
+    --shadow-card: 0 2px 8px -2px hsl(215 15% 50% / 0.08);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  .page-container {
+    @apply min-h-screen bg-background;
+  }
+
+  .card-stats {
+    @apply bg-card border border-border rounded-xl p-6;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .card-stats:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .table-container {
+    @apply bg-card border border-border rounded-xl overflow-hidden;
+    box-shadow: var(--shadow-card);
+  }
+
+  .form-container {
+    @apply bg-card border border-border rounded-xl p-6;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-lg transition-all duration-200;
+  }
+
+  .nav-link.active {
+    @apply text-primary bg-primary/10 font-medium;
+  }
+
+  .stats-number {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  .stats-label {
+    @apply text-sm text-muted-foreground font-medium;
+  }
+}
