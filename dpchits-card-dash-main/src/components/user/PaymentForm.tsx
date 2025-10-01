@@ -51,20 +51,24 @@ export const PaymentForm = () => {
     setIsSubmitting(true);
 
     try {
-      const invoiceNo = `INV-${Date.now()}`;
-      const paymentData = {
-        ...formData,
-        invoiceNo,
-        date: new Date().toISOString().split('T')[0],
-        status: "Paid"
-      };
+      // Save user info (not payment)
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${API_BASE_URL}/payments/user-info`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(formData)
+      });
 
-      // Save to database
-      await createPayment(paymentData);
+      if (!response.ok) {
+        throw new Error('Failed to save user info');
+      }
 
       toast({
-        title: "Payment Successful!",
-        description: `Invoice ${invoiceNo} has been generated and saved to database.`,
+        title: "User Saved!",
+        description: `User information has been saved successfully.`,
       });
 
       // Clear form
@@ -105,10 +109,10 @@ export const PaymentForm = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-primary" />
-            Payment Information
+            User Information
           </CardTitle>
           <CardDescription>
-            Enter the payment details to generate an invoice
+            Enter user details for collection management
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -172,15 +176,6 @@ export const PaymentForm = () => {
 
           <div className="flex flex-wrap gap-3 pt-4">
             <Button
-              onClick={handlePreview}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <Eye className="w-4 h-4" />
-              Preview Invoice
-            </Button>
-            
-            <Button
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex items-center gap-2"
@@ -188,12 +183,12 @@ export const PaymentForm = () => {
               {isSubmitting ? (
                 <>
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  Processing...
+                  Saving...
                 </>
               ) : (
                 <>
                   <CreditCard className="w-4 h-4" />
-                  Pay & Generate Invoice
+                  Save User
                 </>
               )}
             </Button>

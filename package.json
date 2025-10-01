@@ -1,5 +1,16 @@
 {
+  "name": "dpchitfund",
+  "version": "1.0.0",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "cd dpchits-card-dash-main && npm install"
+  },
   "dependencies": {
-    "file-saver": "^2.0.5"
+    "axios": "^1.12.2",
+    "file-saver": "^2.0.5",
+    "mysql2": "^3.15.1"
   }
 }

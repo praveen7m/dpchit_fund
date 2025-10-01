@@ -62,8 +62,7 @@ export const Sidebar = ({ items, activeItem, onItemClick, userRole }: SidebarPro
                     <Users className="w-4 h-4 text-primary-foreground" />
                   </div>
                   <div>
-                    <h2 className="font-semibold text-sidebar-foreground">DPChits</h2>
-                    <p className="text-xs text-muted-foreground capitalize">{userRole} Panel</p>
+                    <h2 className="font-semibold text-sidebar-foreground">Greedam</h2>
                   </div>
                 </div>
               )}

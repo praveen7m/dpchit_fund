@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { PaymentForm } from "@/components/user/PaymentForm";
-import { PaymentHistory } from "@/components/user/PaymentHistory";
-import { Home, CreditCard, History } from "lucide-react";
+import { SearchAndPay } from "@/components/user/SearchAndPay";
+import { UserPlus, Search } from "lucide-react";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState("payment");
 
   const sidebarItems = [
-    { id: "payment", label: "Make Payment", icon: CreditCard },
-    { id: "history", label: "Payment History", icon: History },
+    { id: "payment", label: "User Collection", icon: UserPlus },
+    { id: "history", label: "Search & Pay", icon: Search },
   ];
 
   const renderContent = () => {
@@ -17,7 +17,7 @@ const UserDashboard = () => {
       case "payment":
         return <PaymentForm />;
       case "history":
-        return <PaymentHistory />;
+        return <SearchAndPay />;
       default:
         return <PaymentForm />;
     }
@@ -36,10 +36,10 @@ const UserDashboard = () => {
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Welcome back!
+              Welcome back, Collection Agent!
             </h1>
             <p className="text-muted-foreground">
-              Manage your chit fund payments and view your transaction history.
+              Manage collection payments and view transaction history.
             </p>
           </div>
           

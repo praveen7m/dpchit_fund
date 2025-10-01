@@ -13,6 +13,7 @@ import { AdminInvoicePreview } from "@/components/admin/AdminInvoicePreview";
 import { PaymentService } from "@/services/paymentService";
 import { Payment } from "@/lib/database";
 import { useToast } from "@/hooks/use-toast";
+import { socketService } from "@/services/socketService";
 
 interface PaymentRecordsProps {
   filters: {
@@ -50,7 +51,7 @@ const exportToPDF = (data: Payment[], filename: string) => {
     
     // Add title
     doc.setFontSize(20);
-    doc.text('DPChits Payment Records', 20, 20);
+    doc.text('Greedam Ram Finance Payment Records', 20, 20);
     
     // Add date
     doc.setFontSize(12);
@@ -95,10 +96,6 @@ export const PaymentRecords = ({ filters, showAll = true }: PaymentRecordsProps)
   useEffect(() => {
     const loadPayments = async () => {
       try {
-        // Migrate localStorage data to database (one-time)
-        await PaymentService.migrateFromLocalStorage();
-        
-        // Load payments from database and sort by newest first
         const dbPayments = await PaymentService.getAllPayments();
         const sortedPayments = dbPayments.sort((a, b) => {
           const dateA = new Date(a.createdAt || a.date).getTime();
@@ -108,25 +105,31 @@ export const PaymentRecords = ({ filters, showAll = true }: PaymentRecordsProps)
         setPayments(sortedPayments);
       } catch (error) {
         console.error('Error loading payments:', error);
-        // Fallback to localStorage if database fails
-        const storedPayments = JSON.parse(localStorage.getItem("payments") || "[]");
-        setPayments(storedPayments);
       }
     };
     
     loadPayments();
     
-    // Listen for payment updates
-    const handlePaymentUpdate = () => {
-      loadPayments();
-    };
+    // Setup real-time updates
+    const socket = socketService.connect();
     
-    window.addEventListener('paymentUpdated', handlePaymentUpdate);
+    socketService.onPaymentCreated((newPayment) => {
+      setPayments(prev => [newPayment, ...prev]);
+      toast({
+        title: "New Payment",
+        description: `Payment ${newPayment.invoiceNo} was created`,
+      });
+    });
+    
+    socketService.onPaymentDeleted((data) => {
+      setPayments(prev => prev.filter(p => p.id !== data.id));
+    });
     
     return () => {
-      window.removeEventListener('paymentUpdated', handlePaymentUpdate);
+      socketService.offPaymentCreated();
+      socketService.offPaymentDeleted();
     };
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     const applyFilters = async () => {

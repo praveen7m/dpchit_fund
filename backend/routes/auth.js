@@ -13,15 +13,14 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    const user = new User({ username, password, role });
-    await user.save();
+    const user = await User.create({ username, password, role });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     
     res.status(201).json({
       token,
       user: {
-        id: user._id,
+        id: user.id,
         username: user.username,
         role: user.role
       }
@@ -36,35 +35,49 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     
-    // Create default admin if it doesn't exist and this is admin login
-    if (username === 'admin') {
+    // Hardcoded credentials
+    if (username === 'admin' && password === 'admin123') {
+      // Create admin user if doesn't exist
       let adminUser = await User.findOne({ username: 'admin' });
       if (!adminUser) {
-        adminUser = new User({ username: 'admin', password: 'admin123', role: 'admin' });
-        await adminUser.save();
+        adminUser = await User.create({ username: 'admin', password: 'admin123', role: 'admin' });
       }
+      
+      const token = jwt.sign({ id: adminUser.id }, process.env.JWT_SECRET);
+      return res.json({
+        token,
+        user: {
+          id: adminUser.id,
+          username: 'admin',
+          role: 'admin'
+        }
+      });
     }
     
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        username: user.username,
-        role: user.role
+    if (username === 'collection agent' && password === 'collection123') {
+      // Create collection agent user if doesn't exist
+      let agentUser = await User.findOne({ username: 'collection agent' });
+      if (!agentUser) {
+        try {
+          agentUser = await User.create({ username: 'collection agent', password: 'collection123', role: 'user' });
+        } catch (createError) {
+          console.error('Error creating collection agent:', createError);
+          return res.status(500).json({ message: 'Failed to create user' });
+        }
       }
-    });
+      
+      const token = jwt.sign({ id: agentUser.id }, process.env.JWT_SECRET);
+      return res.json({
+        token,
+        user: {
+          id: agentUser.id,
+          username: 'collection agent',
+          role: 'user'
+        }
+      });
+    }
+    
+    return res.status(401).json({ message: 'Invalid credentials' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

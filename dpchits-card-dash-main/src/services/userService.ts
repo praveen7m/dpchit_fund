@@ -51,7 +51,7 @@ export class UserService {
 
   static async getTotalUserCount(): Promise<number> {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/users/count');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://dpchitfund-backend.onrender.com/api'}/auth/users/count`);
       const data = await response.json();
       return data.count;
     } catch (error) {

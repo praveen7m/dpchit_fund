@@ -1,36 +1,24 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { LogIn, Users, UserPlus } from "lucide-react";
+import { LogIn, Users } from "lucide-react";
 import { apiService } from "@/services/apiService";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { toast } = useToast();
-
-  useEffect(() => {
-    // Pre-fill username if coming from registration
-    const usernameParam = searchParams.get('username');
-    if (usernameParam) {
-      setUsername(usernameParam);
-      setRole('user');
-    }
-  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!username || !password || !role) {
+    if (!username || !password) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -42,31 +30,20 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Use API for both admin and user login
       const response = await apiService.login(username, password);
-      if (response) {
-        toast({ title: "Login Successful", description: `Welcome ${response.user.username}!` });
-        if (response.user.role === 'admin') {
-          navigate("/admin");
-        } else {
-          navigate("/user");
-        }
-      } else {
-        throw new Error("Invalid credentials");
-      }
-    } catch (error) {
-      // Fallback for demo admin if API fails
-      if (role === "admin" && username === "admin" && password === "admin123") {
-        localStorage.setItem("user", JSON.stringify({ username, role }));
-        toast({ title: "Login Successful", description: `Welcome ${username}!` });
+      toast({ title: "Login Successful", description: `Welcome ${response.user.username}!` });
+      
+      if (response.user.role === 'admin') {
         navigate("/admin");
       } else {
-        toast({
-          title: "Login Failed",
-          description: error instanceof Error ? error.message : "Invalid credentials",
-          variant: "destructive",
-        });
+        navigate("/user");
       }
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: "Invalid credentials",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -81,8 +58,9 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
             <Users className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">DPChits</h1>
-          <p className="text-muted-foreground">Chit Fund Invoice Generation System</p>
+          <h1 className="text-3xl font-bold text-foreground mb-1">Greedam</h1>
+          <h2 className="text-xl font-semibold text-foreground mb-2">Ram Finance</h2>
+          <p className="text-muted-foreground">Collection Management System</p>
         </div>
 
         <Card className="form-container">
@@ -118,36 +96,7 @@ const Login = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <Select value={role} onValueChange={(value) => {
-                  setRole(value);
-                  if (value !== 'user') {
-                    setUsername("");
-                    setPassword("");
-                  }
-                }}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
-              {role === 'user' && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => navigate('/register')}
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  New User? Register Here
-                </Button>
-              )}
 
 
 
@@ -169,7 +118,7 @@ const Login = () => {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          Demo admin: admin/admin123 | Users: Register when selecting 'User' role
+          Admin: admin/admin123 | Collection Agent: collection agent/collection123
         </p>
       </div>
     </div>

@@ -40,8 +40,9 @@ export const InvoicePreview = ({ data, onClose, onConfirm, isSubmitting }: Invoi
         <CardContent className="space-y-6">
           {/* Invoice Header */}
           <div className="text-center space-y-2 p-6 bg-primary/5 rounded-lg print:bg-transparent">
-            <h2 className="text-2xl font-bold text-primary">DPChits</h2>
-            <p className="text-sm text-muted-foreground">Chit Fund Invoice Generation System</p>
+            <h2 className="text-2xl font-bold text-primary">Greedam</h2>
+            <h3 className="text-lg font-semibold text-primary">Ram Finance</h3>
+            <p className="text-sm text-muted-foreground">Collection Management System</p>
           </div>
 
           {/* Invoice Details */}

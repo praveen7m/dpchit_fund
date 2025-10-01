@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: dpchitfund-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: DB_HOST
+        value: sql12.freesqldatabase.com
+      - key: DB_PORT
+        value: 3306
+      - key: DB_USER
+        value: sql12752159
+      - key: DB_PASSWORD
+        value: Malaveeka@20
+      - key: DB_NAME
+        value: sql12752159
+      - key: JWT_SECRET
+        value: your-super-secret-jwt-key-change-this-in-production
+      - key: NODE_ENV
+        value: production

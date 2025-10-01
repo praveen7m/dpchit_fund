@@ -1,13 +1,15 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { StatsCards } from "@/components/admin/StatsCards";
 import { PaymentRecords } from "@/components/admin/PaymentRecords";
 import { FilterBar } from "@/components/admin/FilterBar";
+import { AdminUserSearch } from "@/components/admin/AdminUserSearch";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ResetService } from "@/services/resetService";
-import { LayoutDashboard, Database, Filter, Users, TrendingUp, RotateCcw } from "lucide-react";
+import { LayoutDashboard, Database, Search, RotateCcw } from "lucide-react";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -62,6 +64,7 @@ const AdminDashboard = () => {
   const sidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "payments", label: "All Payments", icon: Database },
+    { id: "search", label: "Search User", icon: Search },
   ];
 
   const renderContent = () => {
@@ -87,6 +90,15 @@ const AdminDashboard = () => {
             </div>
             <FilterBar filters={filters} onFiltersChange={setFilters} />
             <PaymentRecords filters={filters} showAll={true} />
+          </div>
+        );
+      case "search":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Search User</h2>
+            </div>
+            <AdminUserSearch />
           </div>
         );
 
@@ -118,7 +130,7 @@ const AdminDashboard = () => {
                   Admin Dashboard
                 </h1>
                 <p className="text-muted-foreground">
-                  Monitor chit fund activities, manage payments, and view comprehensive reports.
+                  Monitor collection activities, manage payments, and view comprehensive reports.
                 </p>
               </div>
               <Button
